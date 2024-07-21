@@ -1,7 +1,8 @@
-import MessageListItem from '../components/MessageListItem';
-import { useState } from 'react';
-import { Message, getMessages } from '../data/messages';
+import MessageListItem from "../components/MessageListItem";
+import { useState } from "react";
+import { Message, getMessages } from "../data/messages";
 import {
+  IonButton,
   IonContent,
   IonHeader,
   IonList,
@@ -10,12 +11,17 @@ import {
   IonRefresherContent,
   IonTitle,
   IonToolbar,
-  useIonViewWillEnter
-} from '@ionic/react';
-import './Home.css';
+  useIonViewWillEnter,
+} from "@ionic/react";
+import "./Home.css";
+import { MyCustomPlugin } from "my-custom-plugin";
 
 const Home: React.FC = () => {
-
+  async function testPluginMethod(msg: string) {
+    await MyCustomPlugin.testPluginMethod({ msg: msg }).then((res: any) => {
+      alert("Return value is" + JSON.stringify(res.value));
+    });
+  }
   const [messages, setMessages] = useState<Message[]>([]);
 
   useIonViewWillEnter(() => {
@@ -43,14 +49,16 @@ const Home: React.FC = () => {
 
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">
-              Inbox
-            </IonTitle>
+            <IonTitle size="large">Inbox</IonTitle>
           </IonToolbar>
         </IonHeader>
-
+        <IonButton onClick={() => testPluginMethod("Hello World")}>
+          Test Plugin
+        </IonButton>
         <IonList>
-          {messages.map(m => <MessageListItem key={m.id} message={m} />)}
+          {messages.map((m) => (
+            <MessageListItem key={m.id} message={m} />
+          ))}
         </IonList>
       </IonContent>
     </IonPage>
